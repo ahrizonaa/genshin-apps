@@ -1,6 +1,6 @@
 ## Demo
 
-https://genshin-apps-2km6a.ondigitalocean.app/
+https://genshincook.vercel.app
 
 # Getting Started with Create React App
 
