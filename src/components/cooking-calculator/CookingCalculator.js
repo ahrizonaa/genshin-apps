@@ -77,6 +77,26 @@ class CookingCalculator extends React.Component {
 		}));
 	}
 
+	rowSlideInStart(e) {
+		let currHeight = this.state.selectedMeals.length * 105;
+		if (currHeight > e.target.parentElement.parentElement.clientHeight) {
+			e.target.parentElement.style.overflowY = 'auto';
+		} else {
+			e.target.parentElement.style.overflowY = 'hidden';
+		}
+	}
+
+	rowSlideInEnd(e) {
+		if (
+			e.target.parentElement.scrollHeight >
+			e.target.parentElement.parentElement.clientHeight
+		) {
+			e.target.parentElement.style.overflowY = 'auto';
+		} else {
+			e.target.parentElement.style.overflowY = 'hidden';
+		}
+	}
+
 	render() {
 		return (
 			<div className="cook-container">
@@ -132,13 +152,16 @@ class CookingCalculator extends React.Component {
 					</div>
 				</div>
 				<div className="panel panel-right">
-					<div className="mealprep-container">
+					<div className="mealprep-container" id="mealprep">
 						{this.state.selectedMeals.map((e, i) => {
 							return (
 								<div
+									onAnimationStart={this.rowSlideInStart.bind(this)}
+									onAnimationEnd={this.rowSlideInEnd.bind(this)}
 									key={i}
 									className={
-										'meal-row ' + this.starCss[e.stars].replace('-scroll', '')
+										'meal-row slide-in-bottom ' +
+										this.starCss[e.stars].replace('-scroll', '')
 									}>
 									<div className="meal-header">
 										<div className="meal-name">{e.name}</div>
