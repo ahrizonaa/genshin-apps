@@ -1,14 +1,10 @@
 .App {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
+	width: 100vw;
+	height: 100vh;
 }
 body {
-  padding: 0;
-  margin: 0;
-  overflow: hidden;
-  font-family: "Andalé Mono", monospace;
+	padding: 0;
+	margin: 0;
+	overflow: hidden;
+	font-family: 'Andalé Mono', monospace;
 }

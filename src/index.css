@@ -1,25 +1,35 @@
+@font-face {
+	font-family: 'GI';
+	src: url('../public/font/ja-jp.ttf') format('truetype');
+}
+
+* {
+	font-family: GI !important;
+	/* font-weight: lighter !important; */
+}
+
 html {
-  width: 100%;
-  height: 100%;
+	width: 100vw;
+	height: 100vh;
 }
 
 body {
-  margin: 0;
-  /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+	margin: 0;
+	/* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif; */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  width: 100%;
-  height: 100%;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	width: 100vw;
+	height: 100vh;
 }
 
 #root {
-  height: 100%;
-  width: 100%;
+	height: 100vh;
+	width: 100vw;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+	font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+		monospace;
 }
