@@ -43,6 +43,9 @@ class CookingCalculator extends React.Component {
 	}
 
 	dishSelected(dish) {
+		if (this.state.selectedMeals.length == 0) {
+			document.getElementById('mealprep').style.height = '100%';
+		}
 		if (_.find(this.state.selectedMeals, { name: dish.name }) === undefined) {
 			dish.count = 1;
 			let tmpArray = this.state.selectedMeals.concat(dish);
@@ -101,6 +104,7 @@ class CookingCalculator extends React.Component {
 		return (
 			<div className="cook-container">
 				<div className="panel panel-left">
+					<div className="panel-title">Food</div>
 					<div className="tabs">
 						<div
 							ref={this.tabs['heal']}
@@ -152,6 +156,7 @@ class CookingCalculator extends React.Component {
 					</div>
 				</div>
 				<div className="panel panel-right">
+					<div className="panel-title">Selected</div>
 					<div className="mealprep-container" id="mealprep">
 						{this.state.selectedMeals.map((e, i) => {
 							return (

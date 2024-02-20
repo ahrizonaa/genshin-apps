@@ -33,6 +33,13 @@
 	align-items: center;
 }
 
+.panel-title {t6
+	padding: 10px;
+	text-align: center;
+	width: 100%;
+	transition: all 1s linear;
+}
+
 .tabs {
 	height: fit-content;
 	width: 100%;
@@ -187,7 +194,7 @@
 .mealprep-container {
 	overflow-y: hidden;
 	overflow-x: hidden;
-	height: 100%;
+	/* height: 100%; */
 	width: -webkit-fill-available;
 }
 
