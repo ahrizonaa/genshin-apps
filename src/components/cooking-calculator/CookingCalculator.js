@@ -13,7 +13,8 @@ class CookingCalculator extends React.Component {
 
 		this.state = {
 			currentTab: 'heal',
-			selectedMeals: []
+			selectedMeals: [],
+			ingredientTotals: {}
 		};
 
 		this.tabs = {
@@ -30,8 +31,6 @@ class CookingCalculator extends React.Component {
 			4: 'four-star-scroll',
 			5: 'five-star-scroll'
 		};
-
-		this.ingredientTotals = [];
 	}
 
 	switchTab(which) {
@@ -45,21 +44,25 @@ class CookingCalculator extends React.Component {
 	}
 
 	dishSelected(dish) {
-		if (this.state.selectedMeals.length == 0) {
+		console.log('dish selected');
+		if (this.state.selectedMeals.length === 0) {
 			document.getElementById('mealprep').style.height = '100%';
 		}
 		if (_.find(this.state.selectedMeals, { name: dish.name }) === undefined) {
 			dish.count = 1;
-			let tmpArray = this.state.selectedMeals.concat(dish);
-			this.setState({ selectedMeals: tmpArray });
+			let selectedMeals = this.state.selectedMeals.concat({ ...dish });
+			let ingredientTotals = { ...this.state.ingredientTotals };
+			Object.keys(dish.ingredients).forEach((i) => {
+				if (ingredientTotals[i] === undefined) {
+					ingredientTotals[i] = dish.ingredients[i];
+				} else {
+					ingredientTotals[i] += dish.ingredients[i];
+				}
+			});
+			this.setState({ selectedMeals: selectedMeals, ingredientTotals });
 		} else {
-			this.setState((prevState) => ({
-				selectedMeals: prevState.selectedMeals.map((e) =>
-					e.name === dish.name ? { ...e, count: e.count + 1 } : e
-				)
-			}));
+			this.addDish(dish);
 		}
-		this.updateIngredientTotals();
 	}
 
 	subtractDish(dish) {
@@ -67,30 +70,42 @@ class CookingCalculator extends React.Component {
 			if (dish.count - 1 === 0) {
 				_.remove(prevState.selectedMeals, { name: dish.name });
 			}
+			let selectedMeals = prevState.selectedMeals.map((e) =>
+				e.name === dish.name ? { ...e, count: e.count - 1 } : { ...e }
+			);
+			let ingredientTotals = { ...prevState.ingredientTotals };
+			Object.keys(dish.ingredients).forEach((i) => {
+				ingredientTotals[i] -= dish.ingredients[i];
+				if (ingredientTotals[i] === 0) {
+					delete ingredientTotals[i];
+				}
+			});
 			return {
-				selectedMeals: prevState.selectedMeals.map((e) =>
-					e.name === dish.name ? { ...e, count: e.count - 1 } : e
-				)
+				selectedMeals: selectedMeals,
+				ingredientTotals: ingredientTotals
 			};
 		});
-		this.updateIngredientTotals();
 	}
 
 	addDish(dish) {
-		this.setState((prevState) => ({
-			selectedMeals: prevState.selectedMeals.map((e) =>
-				e.name === dish.name ? { ...e, count: e.count + 1 } : e
-			)
-		}));
-		this.updateIngredientTotals();
-	}
-
-	updateIngredientTotals() {
-		let tmpArray = [];
-		
-		this.ingredientTotals = tmpArray;
-		console.log(this.ingredientTotals);
-	
+		this.setState((prevState) => {
+			let selectedMeals = prevState.selectedMeals.map((e) =>
+				e.name === dish.name ? { ...e, count: e.count + 1 } : { ...e }
+			);
+			Object.keys(dish.ingredients).forEach((ingredient) => {
+				if (prevState.ingredientTotals[ingredient] === undefined) {
+					prevState.ingredientTotals[ingredient] = dish.ingredients[ingredient];
+				} else {
+					prevState.ingredientTotals[ingredient] +=
+						dish.ingredients[ingredient];
+				}
+			});
+			let ingredientTotals = { ...prevState.ingredientTotals };
+			return {
+				selectedMeals: selectedMeals,
+				ingredientTotals: ingredientTotals
+			};
+		});
 	}
 
 	rowSlideInStart(e) {
@@ -220,14 +235,14 @@ class CookingCalculator extends React.Component {
 				</div>
 				<div className="panel panel-right">
 					<div className="panel-title">Totals</div>
-					<div className='ingredient-totals'>
-						{
-							this.ingredientTotals.map((e, i) => {
-								return (
-									<div key={i} className='ingredient-totals-row'></div>
-								)
-							})
-						}
+					<div className="ingredient-totals">
+						{Object.keys(this.state.ingredientTotals).map((key, i) => {
+							return (
+								<div key={i} className="ingredient-totals-row">
+									{key} - {this.state.ingredientTotals[key]}
+								</div>
+							);
+						})}
 					</div>
 				</div>
 			</div>
