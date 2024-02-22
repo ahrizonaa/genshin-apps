@@ -44,9 +44,10 @@ class CookingCalculator extends React.Component {
 	}
 
 	dishSelected(dish) {
-		console.log('dish selected');
+		document.getElementById('bell').classList.add('swinging-bell');
 		if (this.state.selectedMeals.length === 0) {
 			document.getElementById('mealprep').style.height = '100%';
+			document.getElementById('ingredient-totals').style.height = '100%';
 		}
 		if (_.find(this.state.selectedMeals, { name: dish.name }) === undefined) {
 			dish.count = 1;
@@ -108,9 +109,13 @@ class CookingCalculator extends React.Component {
 		});
 	}
 
-	rowSlideInStart(e) {
-		let currHeight = this.state.selectedMeals.length * 105;
-		if (currHeight > e.target.parentElement.parentElement.clientHeight) {
+	rowSlideInStart(rowSelector, e) {
+		let currHeight = Array.from(
+			document.getElementsByClassName(rowSelector)
+		).reduce((curr, next) => {
+			return curr + next.clientHeight;
+		}, 0);
+		if (currHeight > e.target.parentElement.clientHeight) {
 			e.target.parentElement.style.overflowY = 'auto';
 		} else {
 			e.target.parentElement.style.overflowY = 'hidden';
@@ -119,13 +124,18 @@ class CookingCalculator extends React.Component {
 
 	rowSlideInEnd(e) {
 		if (
-			e.target.parentElement.scrollHeight >
-			e.target.parentElement.parentElement.clientHeight
+			e.target.parentElement.scrollHeight > e.target.parentElement.clientHeight
 		) {
 			e.target.parentElement.style.overflowY = 'auto';
 		} else {
 			e.target.parentElement.style.overflowY = 'hidden';
 		}
+		e.target.parentElement.scrollTop = 10;
+		e.target.parentElement.scrollTop = 0;
+	}
+
+	bellSwingDone(e) {
+		e.target.classList.remove('swinging-bell');
 	}
 
 	render() {
@@ -184,12 +194,25 @@ class CookingCalculator extends React.Component {
 					</div>
 				</div>
 				<div className="panel panel-mid">
+					<div className="bell-container">
+						<span
+							id="bell"
+							onAnimationEnd={this.bellSwingDone.bind(this)}
+							className="bell fa fa-bell">
+							<svg
+								id="bell-svg"
+								xmlns="http://www.w3.org/2000/svg"
+								viewBox="0 0 448 512">
+								<path d="M224 0c-17.7 0-32 14.3-32 32V51.2C119 66 64 130.6 64 208v18.8c0 47-17.3 92.4-48.5 127.6l-7.4 8.3c-8.4 9.4-10.4 22.9-5.3 34.4S19.4 416 32 416H416c12.6 0 24-7.4 29.2-18.9s3.1-25-5.3-34.4l-7.4-8.3C401.3 319.2 384 273.9 384 226.8V208c0-77.4-55-142-128-156.8V32c0-17.7-14.3-32-32-32zm45.3 493.3c12-12 18.7-28.3 18.7-45.3H224 160c0 17 6.7 33.3 18.7 45.3s28.3 18.7 45.3 18.7s33.3-6.7 45.3-18.7z" />
+							</svg>
+						</span>
+					</div>
 					<div className="panel-title">Selected</div>
 					<div className="mealprep-container" id="mealprep">
 						{this.state.selectedMeals.map((e, i) => {
 							return (
 								<div
-									onAnimationStart={this.rowSlideInStart.bind(this)}
+									onAnimationStart={this.rowSlideInStart.bind(this, 'meal-row')}
 									onAnimationEnd={this.rowSlideInEnd.bind(this)}
 									key={i}
 									className={
@@ -235,14 +258,39 @@ class CookingCalculator extends React.Component {
 				</div>
 				<div className="panel panel-right">
 					<div className="panel-title">Totals</div>
-					<div className="ingredient-totals">
-						{Object.keys(this.state.ingredientTotals).map((key, i) => {
-							return (
-								<div key={i} className="ingredient-totals-row">
-									{key} - {this.state.ingredientTotals[key]}
-								</div>
-							);
-						})}
+					<div className="ingredient-totals" id="ingredient-totals">
+						{Object.keys(this.state.ingredientTotals)
+							.sort(
+								(a, b) =>
+									this.state.ingredientTotals[b] -
+									this.state.ingredientTotals[a]
+							)
+							.map((key, i) => {
+								return (
+									<div
+										onAnimationStart={this.rowSlideInStart.bind(
+											this,
+											'ingredient-totals-row'
+										)}
+										onAnimationEnd={this.rowSlideInEnd.bind(this)}
+										key={i}
+										className="ingredient-totals-row slide-in-bottom"
+										style={{
+											animationDelay:
+												i * 100 - (i - 1 < 0 ? 0 : (i - 1) * 100) + 'ms'
+										}}>
+										<div className="ingredient-icon unset-width">
+											{CookingIngredientIcons[key]}
+										</div>
+										<span className="ingredient-total-name">
+											{key.replace(/_/gi, ' ')}
+										</span>
+										<span className="ingredient-total-qty">
+											{'x' + this.state.ingredientTotals[key]}
+										</span>
+									</div>
+								);
+							})}
 					</div>
 				</div>
 			</div>
