@@ -30,6 +30,8 @@ class CookingCalculator extends React.Component {
 			4: 'four-star-scroll',
 			5: 'five-star-scroll'
 		};
+
+		this.ingredientTotals = [];
 	}
 
 	switchTab(which) {
@@ -57,6 +59,7 @@ class CookingCalculator extends React.Component {
 				)
 			}));
 		}
+		this.updateIngredientTotals();
 	}
 
 	subtractDish(dish) {
@@ -70,6 +73,7 @@ class CookingCalculator extends React.Component {
 				)
 			};
 		});
+		this.updateIngredientTotals();
 	}
 
 	addDish(dish) {
@@ -78,6 +82,15 @@ class CookingCalculator extends React.Component {
 				e.name === dish.name ? { ...e, count: e.count + 1 } : e
 			)
 		}));
+		this.updateIngredientTotals();
+	}
+
+	updateIngredientTotals() {
+		let tmpArray = [];
+		
+		this.ingredientTotals = tmpArray;
+		console.log(this.ingredientTotals);
+	
 	}
 
 	rowSlideInStart(e) {
@@ -155,7 +168,7 @@ class CookingCalculator extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div className="panel panel-right">
+				<div className="panel panel-mid">
 					<div className="panel-title">Selected</div>
 					<div className="mealprep-container" id="mealprep">
 						{this.state.selectedMeals.map((e, i) => {
@@ -205,8 +218,17 @@ class CookingCalculator extends React.Component {
 						})}
 					</div>
 				</div>
-				<div className="panel">
-					<span>Totals</span>
+				<div className="panel panel-right">
+					<div className="panel-title">Totals</div>
+					<div className='ingredient-totals'>
+						{
+							this.ingredientTotals.map((e, i) => {
+								return (
+									<div key={i} className='ingredient-totals-row'></div>
+								)
+							})
+						}
+					</div>
 				</div>
 			</div>
 		);

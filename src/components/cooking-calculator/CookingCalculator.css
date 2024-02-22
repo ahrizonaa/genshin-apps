@@ -26,6 +26,13 @@
 	user-select: none;
 }
 
+.panel-mid {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
 .panel-right {
 	display: flex;
 	flex-direction: column;
@@ -33,7 +40,7 @@
 	align-items: center;
 }
 
-.panel-title {t6
+.panel-title {
 	padding: 10px;
 	text-align: center;
 	width: 100%;
@@ -128,7 +135,6 @@
 
 .dish-title {
 	font-size: 10px;
-	border-radius: 10px 10px 0px 0px;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	display: -webkit-box;
@@ -292,6 +298,24 @@
 }
 .meal-icon:hover {
 	background-color: rgba(204, 204, 204, 0.5);
+}
+
+.ingredient-totals {
+	overflow-y: hidden;
+	overflow-x: hidden;
+	/* height: 100%; */
+	width: -webkit-fill-available;
+}
+
+.ingredient-totals-row {
+	background-color: rgba(131, 131, 131, 0.5);
+	color: whitesmoke;
+	border-radius: 10px;
+	padding: 10px;
+	margin-bottom: 5px;
+	box-shadow: -1px 1px 3px 0 rgba(0, 0, 0, 0.5);
+	max-width: 300px;
+	width: -webkit-fill-available;
 }
 
 .pulsate-fwd {
